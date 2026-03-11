@@ -1,0 +1,21 @@
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+pip-log.txt
+pip-delete-this-directory.txt
+dist/
+build/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Ne pas uploader les fichiers de test ou de donnees sensibles
+*.enc
+*.zip
+test_*.py
+*.decrypted
