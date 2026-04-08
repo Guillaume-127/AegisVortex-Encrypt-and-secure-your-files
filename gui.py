@@ -101,7 +101,7 @@ class AegisVortexGUI(ctk.CTk):
         self.encrypt_btn = ctk.CTkButton(enc_btn_frame, text="[ EXECUTE_ENCRYPTION ]", font=ctk.CTkFont(family=self.font_mono, weight="bold"), fg_color="#000000", border_width=1, border_color=self.matrix_green, hover_color="#004400", text_color=self.matrix_green, height=45, command=lambda: self.start_action("enc"))
         self.encrypt_btn.grid(row=0, column=0, padx=(0, 10), sticky="we")
         
-        ctk.CTkButton(enc_btn_frame, text="[ CLEAR ]", font=ctk.CTkFont(family=self.font_mono), fg_color="#000000", border_width=1, border_color="#AA0000", hover_color="#330000", text_color="#FF0000", height=45, command=lambda: self.clear_fields("enc")).grid(row=0, column=1, sticky="we")
+        ctk.CTkButton(enc_btn_frame, text="[ CLEAR ]", font=ctk.CTkFont(family=self.font_mono), fg_color="#000000", border_width=1, border_color=self.matrix_green, hover_color="#003300", text_color=self.matrix_green, height=45, command=lambda: self.clear_fields("enc")).grid(row=0, column=1, sticky="we")
 
         # --- ONGLET DECRYPT ---
         self.dec_tab = self.tabview.tab(" >> DECRYPT ")
@@ -129,7 +129,7 @@ class AegisVortexGUI(ctk.CTk):
         self.decrypt_btn = ctk.CTkButton(dec_btn_frame, text="[ EXECUTE_DECRYPTION ]", font=ctk.CTkFont(family=self.font_mono, weight="bold"), fg_color="#000000", border_width=1, border_color=self.matrix_green, hover_color="#004400", text_color=self.matrix_green, height=45, command=lambda: self.start_action("dec"))
         self.decrypt_btn.grid(row=0, column=0, padx=(0, 10), sticky="we")
         
-        ctk.CTkButton(dec_btn_frame, text="[ CLEAR ]", font=ctk.CTkFont(family=self.font_mono), fg_color="#000000", border_width=1, border_color="#AA0000", hover_color="#330000", text_color="#FF0000", height=45, command=lambda: self.clear_fields("dec")).grid(row=0, column=1, sticky="we")
+        ctk.CTkButton(dec_btn_frame, text="[ CLEAR ]", font=ctk.CTkFont(family=self.font_mono), fg_color="#000000", border_width=1, border_color=self.matrix_green, hover_color="#003300", text_color=self.matrix_green, height=45, command=lambda: self.clear_fields("dec")).grid(row=0, column=1, sticky="we")
 
         # --- Footer ---
         self.progress_bar = ctk.CTkProgressBar(self, fg_color="#002200", progress_color=self.matrix_green)
@@ -141,6 +141,7 @@ class AegisVortexGUI(ctk.CTk):
 
         # Drag & Drop
         windnd.hook_dropfiles(self, self.on_drop)
+        self.header_label.focus() # Fix for placeholder display
 
     def clear_fields(self, mode):
         if mode == "enc":
