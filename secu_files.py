@@ -69,7 +69,7 @@ class ProgressReporter:
             self.last_reported = self.raw_processed
 
 def derive_key_v23(password: str, salt: b''):
-    kdf = Argon2id(salt=salt, length=32, iterations=3, memory_cost=65536, parallelism=4)
+    kdf = Argon2id(salt=salt, length=32, iterations=3, memory_cost=65536, lanes=4)
     return kdf.derive(password.encode())
 
 def encrypt_target(source_path: str, password: str, compression_level: int, delete_original=False, progress_callback=None):
