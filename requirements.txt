@@ -1,0 +1,7 @@
+cryptography
+zstandard
+argon2-cffi
+tqdm
+customtkinter
+darkdetect
+windnd

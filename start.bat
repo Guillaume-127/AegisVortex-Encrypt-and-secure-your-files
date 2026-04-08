@@ -1,35 +1,28 @@
 @echo off
-title 🔒 SECU-FILES V2 - Console de Sécurisation
+title SÉCU-FILES V3
 color 0A
-
-:: Verifie si Python est installe
 python --version >nul 2>&1
 if %errorlevel% neq 0 (
-    echo [ERREUR] Python n'est pas installe ou n'est pas dans le PATH.
-    echo Veuillez installer Python depuis https://www.python.org/
+    echo [ERREUR] Python absent.
     pause
     exit /b
 )
-
-:: Gestion de l'environnement virtuel
 if not exist "venv\Scripts\activate.bat" (
-    echo [INFO] Premier lancement : Creation de l'environnement virtuel...
+    echo [INFO] Création venv...
     python -m venv venv
 )
-
 call venv\Scripts\activate.bat
-
-:: Installation/Mise a jour des dependances V2
-echo [INFO] Verification des modules de securite (V2)...
+echo [INFO] MàJ dépendances...
 python -m pip install --upgrade pip --quiet
-python -m pip install cryptography zstandard argon2-cffi tqdm --quiet
-
-:: Lancement
+python -m pip install cryptography zstandard argon2-cffi tqdm customtkinter darkdetect windnd --quiet
 cls
-echo ========================================================
-echo   LANCEMENT DE L'INTERFACE SECU-FILES V2 (PRO)
-echo ========================================================
-python secu_files.py
-
+echo 1. Interface Graphique (Recommandé)
+echo 2. Console (Expert)
+set /p c="Choix [1] : "
+if "%c%"=="2" (
+    python secu_files.py
+) else (
+    python gui.py
+)
 call deactivate
 pause
