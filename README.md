@@ -1,7 +1,7 @@
 # 🛡️ AEGIS-VORTEX (V3.8) - "The Matrix Stability Edition" 🏎️⚡🟢
 
 ![Python Version](https://img.shields.io/badge/python-3.8%2B-blue?style=for-the-badge&logo=python)
-![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)
+![License](https://img.shields.io/badge/license-GPL--3.0-green?style=for-the-badge)
 ![Platform](https://img.shields.io/badge/platform-windows-lightgrey?style=for-the-badge&logo=windows)
 ![Version](https://img.shields.io/badge/version-3.8%20Turbo-neon?style=for-the-badge)
 
