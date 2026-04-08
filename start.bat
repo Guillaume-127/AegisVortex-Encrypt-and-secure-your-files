@@ -1,36 +1,35 @@
 @echo off
-title Verrouilleur de Fichiers
+title 🔒 SECU-FILES V2 - Console de Sécurisation
 color 0A
 
 :: Verifie si Python est installe
 python --version >nul 2>&1
 if %errorlevel% neq 0 (
     echo [ERREUR] Python n'est pas installe ou n'est pas dans le PATH.
-    echo Veuillez installer Python depuis https://www.python.org/downloads/
+    echo Veuillez installer Python depuis https://www.python.org/
     pause
     exit /b
 )
 
-:: Verification et creation de l'environnement virtuel (venv)
-if exist "venv\Scripts\activate.bat" goto venv_exists
+:: Gestion de l'environnement virtuel
+if not exist "venv\Scripts\activate.bat" (
+    echo [INFO] Premier lancement : Creation de l'environnement virtuel...
+    python -m venv venv
+)
 
-echo [INFO] Creation de l'environnement virtuel Python...
-python -m venv venv
-
-echo [INFO] Installation des dependances de securite...
 call venv\Scripts\activate.bat
+
+:: Installation/Mise a jour des dependances V2
+echo [INFO] Verification des modules de securite (V2)...
 python -m pip install --upgrade pip --quiet
-python -m pip install cryptography --quiet
-goto launch
+python -m pip install cryptography zstandard argon2-cffi tqdm --quiet
 
-:venv_exists
-call venv\Scripts\activate.bat
-
-:launch
-:: Lance le script Python
-echo Lancement de l'interface de securite...
+:: Lancement
+cls
+echo ========================================================
+echo   LANCEMENT DE L'INTERFACE SECU-FILES V2 (PRO)
+echo ========================================================
 python secu_files.py
 
-:: Desactivation de l'environnement virtuel en quittant
 call deactivate
 pause
