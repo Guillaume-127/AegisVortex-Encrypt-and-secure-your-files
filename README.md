@@ -1,5 +1,10 @@
 # 🛡️ AEGIS-VORTEX (V3.8) - "The Matrix Stability Edition" 🏎️⚡🟢
 
+![Python Version](https://img.shields.io/badge/python-3.8%2B-blue?style=for-the-badge&logo=python)
+![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)
+![Platform](https://img.shields.io/badge/platform-windows-lightgrey?style=for-the-badge&logo=windows)
+![Version](https://img.shields.io/badge/version-3.8%20Turbo-neon?style=for-the-badge)
+
 **AegisVortex** est une suite de sécurité binaire de pointe conçue pour le chiffrement et la compression ultra-rapide de données massives (Go/To). Alliant la robustesse d'un bouclier impénétrable à la vitesse d'un vortex, c'est l'outil ultime pour protéger vos fichiers sensibles sans perdre de temps.
 
 ---
