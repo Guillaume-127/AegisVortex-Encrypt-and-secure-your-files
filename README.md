@@ -26,6 +26,38 @@ Une interface immersive inspirée de Matrix, pensée pour l'efficacité :
 
 ---
 
+## 🖥️ Aperçu de l'Interface
+
+![AegisVortex Encryption](preview/Interface_Encryption.png)
+*Interface principale de Chiffrement (Mode ENCRYPT)*
+
+![AegisVortex Decryption](preview/Interface_Decryption.png)
+*Interface de Restauration (Mode DECRYPT)*
+
+---
+
+## 📖 Comment ça marche ? (Tuto)
+
+### 🖱️ Drag & Drop (Glisser-Déposer)
+Pour une efficacité maximale, ne copiez pas vos chemins à la main :
+1. Prenez votre fichier ou dossier (peu importe s'il est déjà compressé ou non).
+2. Glissez-le directement dans la zone **`SOURCE_PATH`** (onglet Encrypt) ou **`TARGET_PATH`** (onglet Decrypt).
+3. Le logiciel détecte automatiquement s'il s'agit d'un dossier ou d'un fichier et prépare l'action.
+
+### 🛡️ Options de Sécurité
+- **[ RESET_DATA ] :** Ce bouton efface instantanément tous les champs (chemins et mots de passe). Utile pour "nettoyer" l'écran avant de quitter ou pour enchaîner plusieurs sessions.
+- **KEEP_ORIGINAL :** 
+  - **Coché (Par défaut) :** Conserve votre fichier d'origine après l'opération.
+  - **Décoché :** Supprime automatiquement le fichier source une fois que l'action est réussie. *Idéal pour gagner de la place ou effacer les traces.*
+
+### 🏎️ Les Modes de Compression
+AegisVortex utilise l'algorithme surpuissant **Zstandard (Zstd)** :
+- **RAPIDE :** (Niveau 1) Pour les dossiers massifs (To). Vitesse d'écriture maximale, compression légère.
+- **ÉQUILIBRÉ :** (Niveau 3) Le standard. Excellent compromis entre taille de fichier et temps de calcul.
+- **MAXIMUM :** (Niveau 19) Pour archiver à long terme. Compresse au maximum vos données, mais demande plus de temps et de processeur.
+
+---
+
 ## 🛠️ Installation en 1 Clic
 
 ### 1️⃣ Prérequis
