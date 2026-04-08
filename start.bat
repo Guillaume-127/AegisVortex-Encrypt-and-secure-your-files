@@ -1,5 +1,5 @@
 @echo off
-title SÉCU-FILES V3
+title AEGIS-VORTEX V3.8 - MATRI-X EDITION
 color 0A
 python --version >nul 2>&1
 if %errorlevel% neq 0 (

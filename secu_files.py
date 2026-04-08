@@ -182,4 +182,4 @@ def decrypt_file(file_path: str, password: str, progress_callback=None):
         return False, "Format unknown."
 
 if __name__ == "__main__":
-    print("SÉCU-FILES ENGINE V3.5 TURBO READY.")
+    print("AEGIS-VORTEX ENGINE V3.8 READY.")

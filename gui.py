@@ -10,8 +10,8 @@ class SecuFilesGUI(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        self.title("🔒 SÉCU-FILES V3.8 - MATRI-X STABILITY")
-        self.geometry("750x600")
+        self.title("🔒 AEGIS-VORTEX V3.8 - MATRI-X STABILITY")
+        self.geometry("750x650")
         ctk.set_appearance_mode("dark")
         
         # Thème Matrix
@@ -37,12 +37,12 @@ class SecuFilesGUI(ctk.CTk):
         self.grid_columnconfigure(0, weight=1)
         
         # Header
-        self.header_label = ctk.CTkLabel(self, text="SÉCU-FILES V3", 
+        self.header_label = ctk.CTkLabel(self, text="AEGIS-VORTEX V3", 
                                         font=ctk.CTkFont(family=self.font_mono, size=32, weight="bold"),
                                         text_color=self.matrix_green)
         self.header_label.grid(row=0, column=0, padx=20, pady=(20, 5))
 
-        self.subheader_label = ctk.CTkLabel(self, text="STABILITY MODE: ACTIVE", 
+        self.subheader_label = ctk.CTkLabel(self, text="DEFENSE GRID: ACTIVE", 
                                            font=ctk.CTkFont(family=self.font_mono, size=14),
                                            text_color=self.matrix_green)
         self.subheader_label.grid(row=1, column=0, padx=20, pady=(0, 10))
