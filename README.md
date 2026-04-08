@@ -24,15 +24,11 @@ Une interface immersive inspirée de Matrix, pensée pour l'efficacité :
 - **Drag & Drop :** Glissez un dossier, tapez votre mot de passe, et c'est protégé.
 - **100% Portable :** Copiez le dossier sur une clé USB et utilisez-le sur n'importe quel ordinateur Windows.
 
----
-
 ## 🖥️ Aperçu de l'Interface
 
-![AegisVortex Encryption](preview/Interface_Encryption.png)
-*Interface principale de Chiffrement (Mode ENCRYPT)*
-
-![AegisVortex Decryption](preview/Interface_Decryption.png)
-*Interface de Restauration (Mode DECRYPT)*
+| 🟢 Moteur de Chiffrement (ENCRYPT) | 🔐 Moteur de Restauration (DECRYPT) |
+| :---: | :---: |
+| ![AegisVortex Encryption](preview/Interface_Encryption.png) | ![AegisVortex Decryption](preview/Interface_Decryption.png) |
 
 ---
 
