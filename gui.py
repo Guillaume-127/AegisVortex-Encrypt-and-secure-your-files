@@ -67,14 +67,16 @@ class AegisVortexGUI(ctk.CTk):
         self.enc_tab = self.tabview.tab(" >> ENCRYPT ")
         self.enc_tab.grid_columnconfigure(0, weight=1)
 
-        # Bouton WIPE_BUFFER isolé en haut à gauche
-        ctk.CTkButton(self.enc_tab, text="[ WIPE_BUFFER ]", font=ctk.CTkFont(family=self.font_mono, size=10), fg_color="#000000", border_width=1, border_color=self.matrix_green, hover_color="#330000", text_color=self.matrix_green, height=20, width=100, command=lambda: self.clear_fields("enc")).grid(row=0, column=0, padx=20, pady=(10, 0), sticky="w")
+        # Row 0 : Reset button (top left)
+        ctk.CTkButton(self.enc_tab, text="[ RESET_DATA ]", font=ctk.CTkFont(family=self.font_mono, size=10), fg_color="#000000", border_width=1, border_color=self.matrix_green, hover_color="#330000", text_color=self.matrix_green, height=20, width=100, command=lambda: self.clear_fields("enc")).grid(row=0, column=0, padx=20, pady=(10, 5), sticky="w")
 
-        ctk.CTkLabel(self.enc_tab, text="SOURCE_PATH >", font=ctk.CTkFont(family=self.font_mono), text_color=self.matrix_green).grid(row=1, column=0, padx=20, pady=(10, 0), sticky="w")
+        # Row 1-2 : Path
+        ctk.CTkLabel(self.enc_tab, text="SOURCE_PATH >", font=ctk.CTkFont(family=self.font_mono), text_color=self.matrix_green).grid(row=1, column=0, padx=20, pady=(5, 0), sticky="w")
         self.path_entry_enc = ctk.CTkEntry(self.enc_tab, textvariable=self.target_path_enc, font=ctk.CTkFont(family=self.font_mono), fg_color="#000000", text_color=self.matrix_green, border_color=self.matrix_green, placeholder_text="Drag & Drop files or Scan...", placeholder_text_color="#006600", width=450)
         self.path_entry_enc.grid(row=2, column=0, padx=20, pady=5, sticky="we")
-        ctk.CTkButton(self.enc_tab, text="SCAN", font=ctk.CTkFont(family=self.font_mono, weight="bold"), fg_color="#000000", border_width=1, border_color=self.matrix_green, hover_color="#003300", text_color=self.matrix_green, command=lambda: self.browse("enc"), width=80).grid(row=2, column=1, padx=(0, 20), pady=5)
+        ctk.CTkButton(self.enc_tab, text="SCAN", font=ctk.CTkFont(family=self.font_mono, weight="bold"), fg_color="#000000", border_width=1, border_color=self.matrix_green, hover_color="#003300", text_color=self.matrix_green, command=lambda: self.browse("enc"), width=80).grid(row=2, column=1, padx=(0, 20), pady=10)
 
+        # Row 3-4 : Keys
         ctk.CTkLabel(self.enc_tab, text="ACCESS_KEY >", font=ctk.CTkFont(family=self.font_mono), text_color=self.matrix_green).grid(row=3, column=0, padx=20, pady=(10, 0), sticky="w")
         self.pass_entry_enc = ctk.CTkEntry(self.enc_tab, textvariable=self.password_enc, font=ctk.CTkFont(family=self.font_mono), fg_color="#000000", text_color=self.matrix_green, border_color=self.matrix_green, placeholder_text="Key...", show="*", width=550)
         self.pass_entry_enc.grid(row=4, column=0, columnspan=2, padx=20, pady=5, sticky="we")
@@ -83,8 +85,9 @@ class AegisVortexGUI(ctk.CTk):
         self.pass_conf_enc = ctk.CTkEntry(self.enc_tab, textvariable=self.password_conf, font=ctk.CTkFont(family=self.font_mono), fg_color="#000000", text_color=self.matrix_green, border_color=self.matrix_green, placeholder_text="Confirm...", show="*", width=550)
         self.pass_conf_enc.grid(row=6, column=0, columnspan=2, padx=20, pady=5, sticky="we")
 
+        # Options (Compression + Keep)
         enc_opt_frame = ctk.CTkFrame(self.enc_tab, fg_color="transparent")
-        enc_opt_frame.grid(row=7, column=0, columnspan=2, padx=20, pady=15, sticky="w")
+        enc_opt_frame.grid(row=7, column=0, columnspan=2, padx=20, pady=(15, 5), sticky="w")
         ctk.CTkLabel(enc_opt_frame, text="COMPRESSION:", font=ctk.CTkFont(family=self.font_mono), text_color=self.matrix_green).grid(row=0, column=0)
         self.comp_menu = ctk.CTkOptionMenu(enc_opt_frame, values=["Rapide", "Équilibré", "Maximum"], font=ctk.CTkFont(family=self.font_mono), 
                                           fg_color="#000000", button_color="#003300", button_hover_color="#006600", 
@@ -96,42 +99,45 @@ class AegisVortexGUI(ctk.CTk):
         self.keep_check_enc = ctk.CTkCheckBox(enc_opt_frame, text="KEEP_ORIGINAL", variable=self.keep_original_enc, font=ctk.CTkFont(family=self.font_mono), text_color=self.matrix_green, fg_color="#000000", border_color=self.matrix_green, hover_color="#003300", checkmark_color=self.matrix_green)
         self.keep_check_enc.grid(row=0, column=2, padx=10)
 
+        # Execute Button (Centered)
         enc_btn_frame = ctk.CTkFrame(self.enc_tab, fg_color="transparent")
-        enc_btn_frame.grid(row=7, column=0, columnspan=2, padx=20, pady=10, sticky="we")
-        enc_btn_frame.grid_columnconfigure(0, weight=3)
-        enc_btn_frame.grid_columnconfigure(1, weight=1)
+        enc_btn_frame.grid(row=8, column=0, columnspan=2, padx=20, pady=20, sticky="we")
+        enc_btn_frame.grid_columnconfigure(0, weight=1)
 
-        self.encrypt_btn = ctk.CTkButton(enc_btn_frame, text="[ EXECUTE_ENCRYPTION ]", font=ctk.CTkFont(family=self.font_mono, weight="bold"), fg_color="#000000", border_width=1, border_color=self.matrix_green, hover_color="#004400", text_color=self.matrix_green, height=45, command=lambda: self.start_action("enc"))
-        self.encrypt_btn.grid(row=0, column=0, sticky="we")
+        self.encrypt_btn = ctk.CTkButton(enc_btn_frame, text="[ EXECUTE_ENCRYPTION ]", font=ctk.CTkFont(family=self.font_mono, weight="bold"), fg_color="#000000", border_width=1, border_color=self.matrix_green, hover_color="#004400", text_color=self.matrix_green, height=50, width=300, command=lambda: self.start_action("enc"))
+        self.encrypt_btn.grid(row=0, column=0)
 
         # --- ONGLET DECRYPT ---
         self.dec_tab = self.tabview.tab(" >> DECRYPT ")
         self.dec_tab.grid_columnconfigure(0, weight=1)
 
-        # Bouton WIPE_BUFFER isolé en haut à gauche
-        ctk.CTkButton(self.dec_tab, text="[ WIPE_BUFFER ]", font=ctk.CTkFont(family=self.font_mono, size=10), fg_color="#000000", border_width=1, border_color=self.matrix_green, hover_color="#330000", text_color=self.matrix_green, height=20, width=100, command=lambda: self.clear_fields("dec")).grid(row=0, column=0, padx=20, pady=(10, 0), sticky="w")
+        # Row 0 : Reset button
+        ctk.CTkButton(self.dec_tab, text="[ RESET_DATA ]", font=ctk.CTkFont(family=self.font_mono, size=10), fg_color="#000000", border_width=1, border_color=self.matrix_green, hover_color="#330000", text_color=self.matrix_green, height=20, width=100, command=lambda: self.clear_fields("dec")).grid(row=0, column=0, padx=20, pady=(10, 5), sticky="w")
 
-        ctk.CTkLabel(self.dec_tab, text="TARGET_PATH (.127) >", font=ctk.CTkFont(family=self.font_mono), text_color=self.matrix_green).grid(row=1, column=0, padx=20, pady=(10, 0), sticky="w")
+        # Row 1-2 : Path
+        ctk.CTkLabel(self.dec_tab, text="TARGET_PATH (.127) >", font=ctk.CTkFont(family=self.font_mono), text_color=self.matrix_green).grid(row=1, column=0, padx=20, pady=(5, 0), sticky="w")
         self.path_entry_dec = ctk.CTkEntry(self.dec_tab, textvariable=self.target_path_dec, font=ctk.CTkFont(family=self.font_mono), fg_color="#000000", text_color=self.matrix_green, border_color=self.matrix_green, placeholder_text="Inject .127 file or Drag...", placeholder_text_color="#006600", width=450)
         self.path_entry_dec.grid(row=2, column=0, padx=20, pady=5, sticky="we")
-        ctk.CTkButton(self.dec_tab, text="SCAN", font=ctk.CTkFont(family=self.font_mono, weight="bold"), fg_color="#000000", border_width=1, border_color=self.matrix_green, hover_color="#003300", text_color=self.matrix_green, command=lambda: self.browse("dec"), width=80).grid(row=2, column=1, padx=(0, 20), pady=5)
+        ctk.CTkButton(self.dec_tab, text="SCAN", font=ctk.CTkFont(family=self.font_mono, weight="bold"), fg_color="#000000", border_width=1, border_color=self.matrix_green, hover_color="#003300", text_color=self.matrix_green, command=lambda: self.browse("dec"), width=80).grid(row=2, column=1, padx=(0, 20), pady=10)
 
+        # Row 3-4 : Key
         ctk.CTkLabel(self.dec_tab, text="ACCESS_KEY >", font=ctk.CTkFont(family=self.font_mono), text_color=self.matrix_green).grid(row=3, column=0, padx=20, pady=(10, 0), sticky="w")
         self.pass_entry_dec = ctk.CTkEntry(self.dec_tab, textvariable=self.password_dec, font=ctk.CTkFont(family=self.font_mono), fg_color="#000000", text_color=self.matrix_green, border_color=self.matrix_green, placeholder_text="Unlock key...", show="*", width=550)
         self.pass_entry_dec.grid(row=4, column=0, columnspan=2, padx=20, pady=5, sticky="we")
 
+        # Option Case Keep
         dec_opt_frame = ctk.CTkFrame(self.dec_tab, fg_color="transparent")
         dec_opt_frame.grid(row=5, column=0, columnspan=2, padx=20, pady=15, sticky="w")
         self.keep_check_dec = ctk.CTkCheckBox(dec_opt_frame, text="KEEP_ORIGINAL (.127)", variable=self.keep_original_dec, font=ctk.CTkFont(family=self.font_mono), text_color=self.matrix_green, fg_color="#000000", border_color=self.matrix_green, hover_color="#003300", checkmark_color=self.matrix_green)
         self.keep_check_dec.grid(row=0, column=0)
 
+        # Execute Button (Centered)
         dec_btn_frame = ctk.CTkFrame(self.dec_tab, fg_color="transparent")
-        dec_btn_frame.grid(row=5, column=0, columnspan=2, padx=20, pady=10, sticky="we")
-        dec_btn_frame.grid_columnconfigure(0, weight=3)
-        dec_btn_frame.grid_columnconfigure(1, weight=1)
+        dec_btn_frame.grid(row=6, column=0, columnspan=2, padx=20, pady=20, sticky="we")
+        dec_btn_frame.grid_columnconfigure(0, weight=1)
 
-        self.decrypt_btn = ctk.CTkButton(dec_btn_frame, text="[ EXECUTE_DECRYPTION ]", font=ctk.CTkFont(family=self.font_mono, weight="bold"), fg_color="#000000", border_width=1, border_color=self.matrix_green, hover_color="#004400", text_color=self.matrix_green, height=45, command=lambda: self.start_action("dec"))
-        self.decrypt_btn.grid(row=0, column=0, sticky="we")
+        self.decrypt_btn = ctk.CTkButton(dec_btn_frame, text="[ EXECUTE_DECRYPTION ]", font=ctk.CTkFont(family=self.font_mono, weight="bold"), fg_color="#000000", border_width=1, border_color=self.matrix_green, hover_color="#004400", text_color=self.matrix_green, height=50, width=300, command=lambda: self.start_action("dec"))
+        self.decrypt_btn.grid(row=0, column=0)
 
         # --- Footer ---
         self.progress_bar = ctk.CTkProgressBar(self, fg_color="#002200", progress_color=self.matrix_green)
@@ -143,7 +149,7 @@ class AegisVortexGUI(ctk.CTk):
 
         # Drag & Drop
         windnd.hook_dropfiles(self, self.on_drop)
-        self.header_label.focus() # Fix for placeholder display
+        self.header_label.focus() # Fix pour forcer l'affichage du placeholder
 
     def clear_fields(self, mode):
         if mode == "enc":
