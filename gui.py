@@ -50,18 +50,16 @@ class SecuFilesGUI(ctk.CTk):
         # --- Tabview ---
         self.tabview = ctk.CTkTabview(self, fg_color="#000000", border_color=self.matrix_green, 
                                       border_width=1, segmented_button_fg_color="#002200",
-                                      segmented_button_selected_color=self.matrix_green,
-                                      segmented_button_selected_hover_color="#00CC33",
+                                      segmented_button_selected_color="#004400", # Vert sombre pour le contraste
+                                      segmented_button_selected_hover_color="#006600",
                                       segmented_button_unselected_color="#000000",
                                       segmented_button_unselected_hover_color="#003300",
                                       text_color=self.matrix_green)
         self.tabview.grid(row=2, column=0, padx=20, pady=0, sticky="nsew")
         self.tabview.add(" >> ENCRYPT ")
         self.tabview.add(" >> DECRYPT ")
-        # Style des boutons d'onglets pour une visibilité maximale
-        self.tabview._segmented_button.configure(font=ctk.CTkFont(family=self.font_mono, weight="bold"),
-                                                selected_text_color="#000000", # Texte noir sur fond vert
-                                                unselected_text_color=self.matrix_green)
+        # Style des boutons d'onglets
+        self.tabview._segmented_button.configure(font=ctk.CTkFont(family=self.font_mono, weight="bold"))
 
         # --- ONGLET ENCRYPT ---
         self.enc_tab = self.tabview.tab(" >> ENCRYPT ")
