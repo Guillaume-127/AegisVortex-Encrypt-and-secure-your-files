@@ -6,7 +6,7 @@ from tkinter import filedialog, messagebox
 import secu_files
 import windnd
 
-class SecuFilesGUI(ctk.CTk):
+class AegisVortexGUI(ctk.CTk):
     def __init__(self):
         super().__init__()
 
@@ -14,7 +14,7 @@ class SecuFilesGUI(ctk.CTk):
         self.geometry("750x650")
         ctk.set_appearance_mode("dark")
         
-        # Thème Matrix
+        # Thème Matrix Premium
         self.matrix_green = "#00FF41"
         self.matrix_dark = "#0D0208"
         self.font_mono = "Consolas"
@@ -25,12 +25,13 @@ class SecuFilesGUI(ctk.CTk):
         self.after(100, self.process_queue)
 
         # --- Variables ---
-        self.target_path_enc = ctk.StringVar()
-        self.target_path_dec = ctk.StringVar()
-        self.password_enc = ctk.StringVar()
-        self.password_conf = ctk.StringVar()
-        self.password_dec = ctk.StringVar()
-        self.keep_original = ctk.BooleanVar(value=True)
+        self.target_path_enc = ctk.StringVar(value="")
+        self.target_path_dec = ctk.StringVar(value="")
+        self.password_enc = ctk.StringVar(value="")
+        self.password_conf = ctk.StringVar(value="")
+        self.password_dec = ctk.StringVar(value="")
+        self.keep_original_enc = ctk.BooleanVar(value=True)
+        self.keep_original_dec = ctk.BooleanVar(value=True)
         self.is_running = False
 
         # --- Layout Principal ---
@@ -50,7 +51,7 @@ class SecuFilesGUI(ctk.CTk):
         # --- Tabview ---
         self.tabview = ctk.CTkTabview(self, fg_color="#000000", border_color=self.matrix_green, 
                                       border_width=1, segmented_button_fg_color="#002200",
-                                      segmented_button_selected_color="#004400", # Vert sombre pour le contraste
+                                      segmented_button_selected_color="#004400",
                                       segmented_button_selected_hover_color="#006600",
                                       segmented_button_unselected_color="#000000",
                                       segmented_button_unselected_hover_color="#003300",
@@ -58,6 +59,7 @@ class SecuFilesGUI(ctk.CTk):
         self.tabview.grid(row=2, column=0, padx=20, pady=0, sticky="nsew")
         self.tabview.add(" >> ENCRYPT ")
         self.tabview.add(" >> DECRYPT ")
+        
         # Style des boutons d'onglets
         self.tabview._segmented_button.configure(font=ctk.CTkFont(family=self.font_mono, weight="bold"))
 
@@ -78,28 +80,35 @@ class SecuFilesGUI(ctk.CTk):
         self.pass_conf_enc = ctk.CTkEntry(self.enc_tab, textvariable=self.password_conf, font=ctk.CTkFont(family=self.font_mono), fg_color="#000000", text_color=self.matrix_green, border_color=self.matrix_green, placeholder_text="Confirm...", show="*", width=550)
         self.pass_conf_enc.grid(row=5, column=0, columnspan=2, padx=20, pady=5, sticky="we")
 
-        opt_frame = ctk.CTkFrame(self.enc_tab, fg_color="transparent")
-        opt_frame.grid(row=6, column=0, columnspan=2, padx=20, pady=15, sticky="w")
-        ctk.CTkLabel(opt_frame, text="COMPRESSION_LVL:", font=ctk.CTkFont(family=self.font_mono), text_color=self.matrix_green).grid(row=0, column=0, padx=(0, 10))
-        self.comp_menu = ctk.CTkOptionMenu(opt_frame, values=["Rapide", "Équilibré", "Maximum"], font=ctk.CTkFont(family=self.font_mono), 
+        enc_opt_frame = ctk.CTkFrame(self.enc_tab, fg_color="transparent")
+        enc_opt_frame.grid(row=6, column=0, columnspan=2, padx=20, pady=15, sticky="w")
+        ctk.CTkLabel(enc_opt_frame, text="COMPRESSION:", font=ctk.CTkFont(family=self.font_mono), text_color=self.matrix_green).grid(row=0, column=0)
+        self.comp_menu = ctk.CTkOptionMenu(enc_opt_frame, values=["Rapide", "Équilibré", "Maximum"], font=ctk.CTkFont(family=self.font_mono), 
                                           fg_color="#000000", button_color="#003300", button_hover_color="#006600", 
                                           dropdown_fg_color="#000000", dropdown_hover_color="#003300", dropdown_text_color=self.matrix_green,
-                                          text_color=self.matrix_green, width=150)
+                                          text_color=self.matrix_green, width=120)
         self.comp_menu.set("Rapide")
-        self.comp_menu.grid(row=0, column=1, padx=(0, 20))
+        self.comp_menu.grid(row=0, column=1, padx=10)
         
-        self.keep_check = ctk.CTkCheckBox(opt_frame, text="KEEP_ORIGINAL", variable=self.keep_original, font=ctk.CTkFont(family=self.font_mono), text_color=self.matrix_green, fg_color="#000000", border_color=self.matrix_green, hover_color="#003300", checkmark_color=self.matrix_green)
-        self.keep_check.grid(row=0, column=2)
+        self.keep_check_enc = ctk.CTkCheckBox(enc_opt_frame, text="KEEP_ORIGINAL", variable=self.keep_original_enc, font=ctk.CTkFont(family=self.font_mono), text_color=self.matrix_green, fg_color="#000000", border_color=self.matrix_green, hover_color="#003300", checkmark_color=self.matrix_green)
+        self.keep_check_enc.grid(row=0, column=2, padx=10)
 
-        self.encrypt_btn = ctk.CTkButton(self.enc_tab, text="[ EXECUTE_ENCRYPTION ]", font=ctk.CTkFont(family=self.font_mono, weight="bold"), fg_color="#000000", border_width=1, border_color=self.matrix_green, hover_color="#004400", text_color=self.matrix_green, height=45, command=lambda: self.start_action("enc"))
-        self.encrypt_btn.grid(row=7, column=0, columnspan=2, padx=20, pady=15, sticky="we")
+        enc_btn_frame = ctk.CTkFrame(self.enc_tab, fg_color="transparent")
+        enc_btn_frame.grid(row=7, column=0, columnspan=2, padx=20, pady=10, sticky="we")
+        enc_btn_frame.grid_columnconfigure(0, weight=3)
+        enc_btn_frame.grid_columnconfigure(1, weight=1)
+
+        self.encrypt_btn = ctk.CTkButton(enc_btn_frame, text="[ EXECUTE_ENCRYPTION ]", font=ctk.CTkFont(family=self.font_mono, weight="bold"), fg_color="#000000", border_width=1, border_color=self.matrix_green, hover_color="#004400", text_color=self.matrix_green, height=45, command=lambda: self.start_action("enc"))
+        self.encrypt_btn.grid(row=0, column=0, padx=(0, 10), sticky="we")
+        
+        ctk.CTkButton(enc_btn_frame, text="[ CLEAR ]", font=ctk.CTkFont(family=self.font_mono), fg_color="#000000", border_width=1, border_color="#AA0000", hover_color="#330000", text_color="#FF0000", height=45, command=lambda: self.clear_fields("enc")).grid(row=0, column=1, sticky="we")
 
         # --- ONGLET DECRYPT ---
         self.dec_tab = self.tabview.tab(" >> DECRYPT ")
         self.dec_tab.grid_columnconfigure(0, weight=1)
 
         ctk.CTkLabel(self.dec_tab, text="TARGET_PATH (.127) >", font=ctk.CTkFont(family=self.font_mono), text_color=self.matrix_green).grid(row=0, column=0, padx=20, pady=(15, 0), sticky="w")
-        self.path_entry_dec = ctk.CTkEntry(self.dec_tab, textvariable=self.target_path_dec, font=ctk.CTkFont(family=self.font_mono), fg_color="#000000", text_color=self.matrix_green, border_color=self.matrix_green, placeholder_text="Inject .127 file...", placeholder_text_color="#006600", width=450)
+        self.path_entry_dec = ctk.CTkEntry(self.dec_tab, textvariable=self.target_path_dec, font=ctk.CTkFont(family=self.font_mono), fg_color="#000000", text_color=self.matrix_green, border_color=self.matrix_green, placeholder_text="Inject .127 file or Drag...", placeholder_text_color="#006600", width=450)
         self.path_entry_dec.grid(row=1, column=0, padx=20, pady=5, sticky="we")
         ctk.CTkButton(self.dec_tab, text="SCAN", font=ctk.CTkFont(family=self.font_mono, weight="bold"), fg_color="#000000", border_width=1, border_color=self.matrix_green, hover_color="#003300", text_color=self.matrix_green, command=lambda: self.browse("dec"), width=80).grid(row=1, column=1, padx=(0, 20), pady=5)
 
@@ -107,8 +116,20 @@ class SecuFilesGUI(ctk.CTk):
         self.pass_entry_dec = ctk.CTkEntry(self.dec_tab, textvariable=self.password_dec, font=ctk.CTkFont(family=self.font_mono), fg_color="#000000", text_color=self.matrix_green, border_color=self.matrix_green, placeholder_text="Unlock key...", show="*", width=550)
         self.pass_entry_dec.grid(row=3, column=0, columnspan=2, padx=20, pady=5, sticky="we")
 
-        self.decrypt_btn = ctk.CTkButton(self.dec_tab, text="[ EXECUTE_DECRYPTION ]", font=ctk.CTkFont(family=self.font_mono, weight="bold"), fg_color="#000000", border_width=1, border_color=self.matrix_green, hover_color="#004400", text_color=self.matrix_green, height=45, command=lambda: self.start_action("dec"))
-        self.decrypt_btn.grid(row=4, column=0, columnspan=2, padx=20, pady=40, sticky="we")
+        dec_opt_frame = ctk.CTkFrame(self.dec_tab, fg_color="transparent")
+        dec_opt_frame.grid(row=4, column=0, columnspan=2, padx=20, pady=15, sticky="w")
+        self.keep_check_dec = ctk.CTkCheckBox(dec_opt_frame, text="KEEP_ORIGINAL (.127)", variable=self.keep_original_dec, font=ctk.CTkFont(family=self.font_mono), text_color=self.matrix_green, fg_color="#000000", border_color=self.matrix_green, hover_color="#003300", checkmark_color=self.matrix_green)
+        self.keep_check_dec.grid(row=0, column=0)
+
+        dec_btn_frame = ctk.CTkFrame(self.dec_tab, fg_color="transparent")
+        dec_btn_frame.grid(row=5, column=0, columnspan=2, padx=20, pady=10, sticky="we")
+        dec_btn_frame.grid_columnconfigure(0, weight=3)
+        dec_btn_frame.grid_columnconfigure(1, weight=1)
+
+        self.decrypt_btn = ctk.CTkButton(dec_btn_frame, text="[ EXECUTE_DECRYPTION ]", font=ctk.CTkFont(family=self.font_mono, weight="bold"), fg_color="#000000", border_width=1, border_color=self.matrix_green, hover_color="#004400", text_color=self.matrix_green, height=45, command=lambda: self.start_action("dec"))
+        self.decrypt_btn.grid(row=0, column=0, padx=(0, 10), sticky="we")
+        
+        ctk.CTkButton(dec_btn_frame, text="[ CLEAR ]", font=ctk.CTkFont(family=self.font_mono), fg_color="#000000", border_width=1, border_color="#AA0000", hover_color="#330000", text_color="#FF0000", height=45, command=lambda: self.clear_fields("dec")).grid(row=0, column=1, sticky="we")
 
         # --- Footer ---
         self.progress_bar = ctk.CTkProgressBar(self, fg_color="#002200", progress_color=self.matrix_green)
@@ -121,8 +142,16 @@ class SecuFilesGUI(ctk.CTk):
         # Drag & Drop
         windnd.hook_dropfiles(self, self.on_drop)
 
+    def clear_fields(self, mode):
+        if mode == "enc":
+            self.target_path_enc.set("")
+            self.password_enc.set("")
+            self.password_conf.set("")
+        else:
+            self.target_path_dec.set("")
+            self.password_dec.set("")
+
     def process_queue(self):
-        """Boucle de polling asynchrone pour mettre à jour l'UI."""
         try:
             while True:
                 msg = self.update_queue.get_nowait()
@@ -183,10 +212,11 @@ class SecuFilesGUI(ctk.CTk):
         def run():
             try:
                 if mode == "enc":
-                    keep = self.keep_original.get()
+                    keep = self.keep_original_enc.get()
                     res, msg = secu_files.encrypt_target(path, pwd, lvl, delete_original=not keep, progress_callback=self.update_progress)
                 else:
-                    res, msg = secu_files.decrypt_file(path, pwd, progress_callback=self.update_progress)
+                    keep = self.keep_original_dec.get()
+                    res, msg = secu_files.decrypt_file(path, pwd, progress_callback=self.update_progress, delete_original=not keep)
                 
                 if res: self.update_queue.put({"type": "messagebox", "m_type": "info", "title": "SUCCESS", "text": f"PROCESS_COMPLETED: {msg}"})
                 else: self.update_queue.put({"type": "messagebox", "m_type": "error", "title": "SECURITY_BREACH", "text": f"PROCESS_FAILED: {msg}"})
@@ -198,5 +228,5 @@ class SecuFilesGUI(ctk.CTk):
         threading.Thread(target=run, daemon=True).start()
 
 if __name__ == "__main__":
-    app = SecuFilesGUI()
+    app = AegisVortexGUI()
     app.mainloop()

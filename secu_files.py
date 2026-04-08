@@ -137,7 +137,7 @@ def encrypt_target(target_path: str, password: str, comp_level: int = 3, delete_
         if os.path.exists(output_path): os.remove(output_path)
         return False, str(e)
 
-def decrypt_file(file_path: str, password: str, progress_callback=None):
+def decrypt_file(file_path: str, password: str, progress_callback=None, delete_original=False):
     if not os.path.exists(file_path): return False, "Target not found."
     f_size = os.path.getsize(file_path)
     
@@ -152,7 +152,6 @@ def decrypt_file(file_path: str, password: str, progress_callback=None):
             try:
                 with open(output_tmp, 'wb') as f_out:
                     dctx = zstd.ZstdDecompressor()
-                    # On utilise le stream_writer natif pour une décompression ultra-rapide
                     with dctx.stream_writer(f_out) as decompressor:
                         reader = ChunkReader(f_in)
                         while True:
@@ -160,7 +159,6 @@ def decrypt_file(file_path: str, password: str, progress_callback=None):
                             if not nonce: break
                             try:
                                 decryptor = Cipher(algorithms.AES(key), modes.GCM(nonce, tag)).decryptor()
-                                # Déchiffrement et envoi direct au moteur de décompression
                                 decompressor.write(decryptor.update(data) + decryptor.finalize())
                             except cryptography.exceptions.InvalidTag:
                                 return False, "Security Breach: Invalid Password."
@@ -175,6 +173,11 @@ def decrypt_file(file_path: str, password: str, progress_callback=None):
                     tn = file_path.replace(V2_EXTENSION, "")
                     if os.path.exists(tn): os.remove(tn)
                     os.rename(output_tmp, tn)
+                
+                # NETTOYAGE POST-OPÉRATION
+                if delete_original:
+                    os.remove(file_path)
+                    
                 return True, "Restoration complete."
             except Exception as e:
                 if os.path.exists(output_tmp): os.remove(output_tmp)
