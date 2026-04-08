@@ -58,14 +58,17 @@ class SecuFilesGUI(ctk.CTk):
         self.tabview.grid(row=2, column=0, padx=20, pady=0, sticky="nsew")
         self.tabview.add(" >> ENCRYPT ")
         self.tabview.add(" >> DECRYPT ")
-        self.tabview._segmented_button.configure(font=ctk.CTkFont(family=self.font_mono, weight="bold"))
+        # Style des boutons d'onglets pour une visibilité maximale
+        self.tabview._segmented_button.configure(font=ctk.CTkFont(family=self.font_mono, weight="bold"),
+                                                selected_text_color="#000000", # Texte noir sur fond vert
+                                                unselected_text_color=self.matrix_green)
 
         # --- ONGLET ENCRYPT ---
         self.enc_tab = self.tabview.tab(" >> ENCRYPT ")
         self.enc_tab.grid_columnconfigure(0, weight=1)
 
         ctk.CTkLabel(self.enc_tab, text="SOURCE_PATH >", font=ctk.CTkFont(family=self.font_mono), text_color=self.matrix_green).grid(row=0, column=0, padx=20, pady=(15, 0), sticky="w")
-        self.path_entry_enc = ctk.CTkEntry(self.enc_tab, textvariable=self.target_path_enc, font=ctk.CTkFont(family=self.font_mono), fg_color="#000000", text_color=self.matrix_green, border_color=self.matrix_green, placeholder_text="Waiting for input...", width=450)
+        self.path_entry_enc = ctk.CTkEntry(self.enc_tab, textvariable=self.target_path_enc, font=ctk.CTkFont(family=self.font_mono), fg_color="#000000", text_color=self.matrix_green, border_color=self.matrix_green, placeholder_text="Drag & Drop files or Scan...", width=450)
         self.path_entry_enc.grid(row=1, column=0, padx=20, pady=5, sticky="we")
         ctk.CTkButton(self.enc_tab, text="SCAN", font=ctk.CTkFont(family=self.font_mono, weight="bold"), fg_color="#000000", border_width=1, border_color=self.matrix_green, hover_color="#003300", text_color=self.matrix_green, command=lambda: self.browse("enc"), width=80).grid(row=1, column=1, padx=(0, 20), pady=5)
 
@@ -81,7 +84,7 @@ class SecuFilesGUI(ctk.CTk):
         opt_frame.grid(row=6, column=0, columnspan=2, padx=20, pady=15, sticky="w")
         ctk.CTkLabel(opt_frame, text="COMPRESSION_LVL:", font=ctk.CTkFont(family=self.font_mono), text_color=self.matrix_green).grid(row=0, column=0, padx=(0, 10))
         self.comp_menu = ctk.CTkOptionMenu(opt_frame, values=["Rapide", "Équilibré", "Maximum"], font=ctk.CTkFont(family=self.font_mono), fg_color="#000000", button_color="#003300", button_hover_color="#006600", text_color=self.matrix_green, width=150)
-        self.comp_menu.set("Équilibré")
+        self.comp_menu.set("Rapide")
         self.comp_menu.grid(row=0, column=1, padx=(0, 20))
         
         self.keep_check = ctk.CTkCheckBox(opt_frame, text="KEEP_ORIGINAL", variable=self.keep_original, font=ctk.CTkFont(family=self.font_mono), text_color=self.matrix_green, fg_color="#000000", border_color=self.matrix_green, hover_color="#003300", checkmark_color=self.matrix_green)
