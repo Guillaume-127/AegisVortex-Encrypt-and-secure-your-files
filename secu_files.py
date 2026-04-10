@@ -139,8 +139,8 @@ def decrypt_file(file_path: str, password: str, progress_callback=None, delete_o
     try:
         with open(file_path, 'rb') as f_in:
             header = f_in.read(6)
-            # Compatibilité : On accepte l'ancienne signature AEC et la nouvelle SEC
-            if header not in [b'SEC127', b'AEC127']:
+            # Compatibilité étendue : SEC127 (actuel), AEC127 (legacy), SECUV3 (early V3)
+            if header not in [b'SEC127', b'AEC127', b'SECUV3']:
                 h_hex = header.hex() if header else "EMPTY"
                 return False, f"Invalid signature (Got: {h_hex}). This file wasn't encrypted with AegisVortex."
             
