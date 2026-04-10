@@ -139,11 +139,17 @@ def decrypt_file(file_path: str, password: str, progress_callback=None, delete_o
     try:
         with open(file_path, 'rb') as f_in:
             header = f_in.read(6)
-            if header != MAGIC_V3:
-                return False, "Not an AegisVortex file or format corrupted."
+            # Compatibilité : On accepte l'ancienne signature AEC et la nouvelle SEC
+            if header not in [b'SEC127', b'AEC127']:
+                h_hex = header.hex() if header else "EMPTY"
+                return False, f"Invalid signature (Got: {h_hex}). This file wasn't encrypted with AegisVortex."
             
-            comp_level, flags = f_in.read(1)[0], f_in.read(1)[0]
+            meta = f_in.read(2)
+            if len(meta) < 2: return False, "Corrupted header: missing flags."
+            comp_level, flags = meta[0], meta[1]
             salt = f_in.read(16)
+            if len(salt) < 16: return False, "Corrupted header: missing salt."
+            
             key = derive_key_v23(password, salt)
             is_folder = bool(flags & 1)
             
