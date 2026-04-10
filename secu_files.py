@@ -101,10 +101,12 @@ def encrypt_target(source_path: str, password: str, compression_level: int, dele
             with cctx.stream_writer(ChunkedGCMWriter(f_out, key)) as compressor:
                 if is_folder:
                     with tarfile.open(fileobj=compressor, mode="w|", format=tarfile.PAX_FORMAT) as tar:
+                        root_folder_name = os.path.basename(source_path.rstrip('\\/'))
                         for root, _, files in os.walk(source_path):
                             for f in files:
                                 full_path = os.path.join(root, f)
-                                arcname = os.path.relpath(full_path, source_path)
+                                # On préserve la structure en incluant le dossier racine
+                                arcname = os.path.join(root_folder_name, os.path.relpath(full_path, source_path))
                                 with open(full_path, 'rb') as f_in:
                                     tarinfo = tar.gettarinfo(full_path, arcname)
                                     tar.addfile(tarinfo, f_in)
@@ -128,40 +130,44 @@ def encrypt_target(source_path: str, password: str, compression_level: int, dele
 
 def decrypt_file(file_path: str, password: str, progress_callback=None, delete_original=False):
     if not os.path.exists(file_path): return False, "Target not found."
+    if os.path.isdir(file_path): return False, "Target is a folder. Please select a .127 file."
+    
     f_size = os.path.getsize(file_path)
-    success, msg = False, "Format unknown."
+    success, msg = False, "Decrypt Failed."
     
     output_tmp = file_path + ".tmp"
     try:
         with open(file_path, 'rb') as f_in:
             header = f_in.read(6)
-            if header == MAGIC_V3:
-                comp_level, flags = f_in.read(1)[0], f_in.read(1)[0]
-                salt = f_in.read(16)
-                key = derive_key_v23(password, salt)
-                is_folder = bool(flags & 1)
-                
-                with open(output_tmp, 'wb') as f_out:
-                    dctx = zstd.ZstdDecompressor()
-                    with dctx.stream_writer(f_out) as decompressor:
-                        reader = ChunkReader(f_in)
-                        while True:
-                            nonce, data, tag = reader.read_next()
-                            if not nonce: break
-                            decryptor = Cipher(algorithms.AES(key), modes.GCM(nonce, tag)).decryptor()
-                            decompressor.write(decryptor.update(data) + decryptor.finalize())
-                            if progress_callback: progress_callback(f_in.tell(), f_size)
-                
-                if is_folder:
-                    with tarfile.open(output_tmp, "r") as tar:
-                        tar.extractall(path=os.path.dirname(file_path))
-                    os.remove(output_tmp)
-                else:
-                    tn = file_path.replace(V2_EXTENSION, "")
-                    if os.path.exists(tn): os.remove(tn)
-                    os.rename(output_tmp, tn)
-                
-                success, msg = True, "Restoration complete."
+            if header != MAGIC_V3:
+                return False, "Not an AegisVortex file or format corrupted."
+            
+            comp_level, flags = f_in.read(1)[0], f_in.read(1)[0]
+            salt = f_in.read(16)
+            key = derive_key_v23(password, salt)
+            is_folder = bool(flags & 1)
+            
+            with open(output_tmp, 'wb') as f_out:
+                dctx = zstd.ZstdDecompressor()
+                with dctx.stream_writer(f_out) as decompressor:
+                    reader = ChunkReader(f_in)
+                    while True:
+                        nonce, data, tag = reader.read_next()
+                        if not nonce: break
+                        decryptor = Cipher(algorithms.AES(key), modes.GCM(nonce, tag)).decryptor()
+                        decompressor.write(decryptor.update(data) + decryptor.finalize())
+                        if progress_callback: progress_callback(f_in.tell(), f_size)
+            
+            if is_folder:
+                with tarfile.open(output_tmp, "r") as tar:
+                    tar.extractall(path=os.path.dirname(file_path))
+                os.remove(output_tmp)
+            else:
+                tn = file_path.replace(V2_EXTENSION, "")
+                if os.path.exists(tn): os.remove(tn)
+                os.rename(output_tmp, tn)
+            
+            success, msg = True, "Restoration complete."
     except cryptography.exceptions.InvalidTag:
         msg = "Security Breach: Invalid Password."
     except Exception as e:
@@ -171,7 +177,6 @@ def decrypt_file(file_path: str, password: str, progress_callback=None, delete_o
             try: os.remove(output_tmp)
             except: pass
     
-    # NETTOYAGE FINAL (En dehors du bloc with pour éviter WinError 32)
     if success and delete_original:
         try: os.remove(file_path)
         except: pass
